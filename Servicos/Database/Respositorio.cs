@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Desafio21diasAPI
+namespace Desafio21diasAPI.Servicos.Database
 {
     public class Repositorio
     {

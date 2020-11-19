@@ -1,6 +1,6 @@
 using System;
 
-namespace Desafio21diasAPI
+namespace Desafio21diasAPI.Models
 {
     public interface IModel
     {

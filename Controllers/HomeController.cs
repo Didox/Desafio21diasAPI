@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Desafio21diasAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -19,6 +21,7 @@ namespace Desafio21diasAPI.Controllers
 
         [HttpGet]
         [Route("/")]
+        [AllowAnonymous]
         public Home Get()
         {
             return new Home();
