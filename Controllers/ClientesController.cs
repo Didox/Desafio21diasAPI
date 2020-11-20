@@ -45,6 +45,26 @@ namespace Desafio21diasAPI.Controllers
         [Route("/clientes")]
         public IEnumerable<Cliente> Get()
         {
+            // var principal = HttpContext.User;
+            // if (principal.Claims != null)
+            // {
+            //     foreach (var claim in principal.Claims)
+            //     {
+            //         _logger.LogInformation($"=====================", DateTimeOffset.Now);
+            //         _logger.LogInformation($":::: CLAIM TYPE: {claim.Type} ::::", DateTimeOffset.Now);
+            //         _logger.LogInformation($":::: CLAIM VALUE: {claim.Value} ::::", DateTimeOffset.Now);
+            //     }
+            // }
+
+            // var principal = HttpContext.User;
+            // var loginDado = principal.Claims.SingleOrDefault(p => p.Value == "danilo").Value;
+            // var testeRule = principal.Claims.SingleOrDefault(p => p.Value == "administrador").Value;
+            
+            // _logger.LogInformation($"=====================", DateTimeOffset.Now);
+            // _logger.LogInformation($"::::[{loginDado}]::::", DateTimeOffset.Now);
+            // _logger.LogInformation($"::::[{testeRule}]::::", DateTimeOffset.Now);
+            // _logger.LogInformation($"=====================", DateTimeOffset.Now);
+        
             return FabricaDeClientesEmMemoria.Todos();
         }
 
@@ -67,10 +87,22 @@ namespace Desafio21diasAPI.Controllers
         [HttpPut]
         [Route("/clientes/{id}")]
         [Authorize(Roles = "editor, administrador")]
-        public void Atualizar(int id, [FromBody] Cliente cliente)
+        public IActionResult Atualizar(int id, [FromBody] Cliente cliente)
         {
+            var cli = FabricaDeClientesEmMemoria.BuscaPorId(id);
+
+            var ruleAdm = HttpContext.User.Claims.SingleOrDefault(p => p.Value == "administrador");
+            if(ruleAdm == null){
+                var loginDado = HttpContext.User.Claims.SingleOrDefault(p => p.Value == cli.Login);
+                if(loginDado == null){
+                    return Unauthorized(new { message = "Você não tem acesso para alterar informações de usuário" });
+                }
+            }
+
             cliente.Id = id;
             FabricaDeClientesEmMemoria.Salvar(ref cliente);
+
+            return NoContent();
         }
 
         [HttpDelete]
